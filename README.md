@@ -47,7 +47,10 @@ Differencify matches [Puppeteer](https://github.com/GoogleChrome/puppeteer/blob/
     .screenshot()
     .toMatchSnapshot()
     .result((result) => {
-      console.log(result); // Prints true or false
+      console.log(result); // Prints test result data, either:
+      // { matched: true }
+      // { matched: false, diffPath: 'path/to/diff' }
+      // { updated: true }
     })
     .close()
     .end();
@@ -65,7 +68,10 @@ Differencify matches [Puppeteer](https://github.com/GoogleChrome/puppeteer/blob/
   await page.close();
   await target.close();
 
-  console.log(result); // Prints true or false
+  console.log(result); // Prints test result data, either:
+  // { matched: true }
+  // { matched: false, diffPath: 'path/to/diff' }
+  // { updated: true }
 })();
 ```
 See more examples [here](API.md)
