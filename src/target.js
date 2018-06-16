@@ -225,7 +225,7 @@ export default class Target {
         this._logError(error);
       }
       if (this.error) {
-        return { matched: false };
+        return this.testConfig.isJest ? false : { matched: false };
       }
       if (this.testConfig.isJest === true) {
         const toMatchImageSnapshot = jestMatchers.toMatchImageSnapshot;
@@ -233,7 +233,7 @@ export default class Target {
         expect(result).toMatchImageSnapshot(this.testStats);
       }
       if (result.matched || result.updated || result.added) {
-        return result;
+        return this.testConfig.isJest ? true : result;
       }
     }
     if (this.testConfig.isJest && this.error) {
@@ -241,7 +241,7 @@ export default class Target {
       expect.extend({ toNotError });
       expect(this.error).toNotError(this.testStats);
     }
-    return result;
+    return this.testConfig.isJest ? false : result;
   }
 
   async close() {
