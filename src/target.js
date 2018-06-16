@@ -217,15 +217,15 @@ export default class Target {
   }
 
   async _evaluateResult() {
+    let result;
     if (!this.error) {
-      let result;
       try {
         result = await compareImage(this.image, this.globalConfig, this.testConfig);
       } catch (error) {
         this._logError(error);
       }
       if (this.error) {
-        return false;
+        return { matched: false };
       }
       if (this.testConfig.isJest === true) {
         const toMatchImageSnapshot = jestMatchers.toMatchImageSnapshot;
@@ -233,7 +233,7 @@ export default class Target {
         expect(result).toMatchImageSnapshot(this.testStats);
       }
       if (result.matched || result.updated || result.added) {
-        return true;
+        return result;
       }
     }
     if (this.testConfig.isJest && this.error) {
@@ -241,7 +241,7 @@ export default class Target {
       expect.extend({ toNotError });
       expect(this.error).toNotError(this.testStats);
     }
-    return false;
+    return result;
   }
 
   async close() {
